@@ -13,10 +13,10 @@ class TrafficLightClassifier(object):
         self.input_shape = (600, 800, 3)
         self.num_classes = 3
         self.batch_size = 100
-        self.nb_steps = int(2000/self.batch_size)
+        self.nb_steps = 2*int(2000/self.batch_size)
         self.nb_steps_val = int(550/self.batch_size)
         self.nb_epochs = 20
-        self.learning_rate = 0.001
+        self.learning_rate = 0.0001
 
         self.model = None
         self.X_train, self.X_test, self.y_train, self.y_test = None, None, None, None
@@ -29,13 +29,13 @@ class TrafficLightClassifier(object):
                          activation='relu',
                          input_shape=self.input_shape))
         model.add(Dropout(0.1))
-        model.add(MaxPooling2D(pool_size=(2, 2), strides=(2, 2)))
+        model.add(MaxPooling2D(pool_size=(3, 3), strides=(2, 2)))
         model.add(Conv2D(24, (3, 3), activation='relu'))
         model.add(Dropout(0.1))
-        model.add(MaxPooling2D(pool_size=(2, 2)))        
+        model.add(MaxPooling2D(pool_size=(3, 3)))        
         model.add(Conv2D(48, (3, 3), activation='relu'))
         model.add(Dropout(0.1))
-        model.add(MaxPooling2D(pool_size=(2, 2)))
+        model.add(MaxPooling2D(pool_size=(3, 3)))
         model.add(Flatten())
         model.add(Dense(100, activation='relu'))
         model.add(Dense(self.num_classes, activation='softmax'))
@@ -52,7 +52,7 @@ class TrafficLightClassifier(object):
         pass
 
     def train_model(self):
-        train_datagen = ImageDataGenerator(
+        train_datagen = ImageDataGenerator(            
             horizontal_flip=True)
        
         train_generator = train_datagen.flow_from_directory(
